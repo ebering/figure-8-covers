@@ -17,6 +17,13 @@ for c in covers:
 # permutation-representation: [ permutation, permutation, permutation, permutation]
 # permutations on the generators a, b, c, d
 
+
+def kev_inverse(permutation):
+    return
+
+def ivy_inverse(permutation):
+    return
+
 # is_special_cover: permutation-representation -> 
 #   false or "A-special" or "C-special" or "both"
 def is_special_cover(perm-rep):
