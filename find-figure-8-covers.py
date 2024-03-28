@@ -14,7 +14,10 @@ covers = permutation_reps(4, relators, [], 10)
 
 
 def kev_inverse(permutation):
-    return
+    out = [0] * len(permutation)
+    for i in range(len(permutation)):
+        out[permutation[i]] = i
+    return out
 
 
 def ivy_inverse(permutation):
@@ -73,6 +76,12 @@ def self_osculates(hyp):
 # direct_osculates: hyperplane -> bool
 def direct_osculates(hyp):
     return False
+
+
+permutation_1 = [1, 3, 4, 0, 2]
+print(permutation_1)
+print(kev_inverse(permutation_1))
+print(kev_inverse(kev_inverse(permutation_1)))
 
 
 for c in covers:
