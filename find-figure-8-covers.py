@@ -21,7 +21,10 @@ def kev_inverse(permutation):
 
 
 def ivy_inverse(permutation):
-    return
+    out = list(range(len(permutation)))
+    for i in range(len(permutation)):
+        out[permutation[i]] = i
+    return out
 
 
 # is_special_cover: permutation-representation -> 
@@ -80,8 +83,8 @@ def direct_osculates(hyp):
 
 permutation_1 = [1, 3, 4, 0, 2]
 print(permutation_1)
-print(kev_inverse(permutation_1))
-print(kev_inverse(kev_inverse(permutation_1)))
+print(ivy_inverse(permutation_1))
+print(ivy_inverse(kev_inverse(permutation_1)))
 
 
 for c in covers:
