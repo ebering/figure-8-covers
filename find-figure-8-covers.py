@@ -12,6 +12,50 @@ covers = permutation_reps(4, relators, [], 10)
 # permutation-representation: [ permutation, permutation, permutation, permutation]
 # permutations on the generators a, b, c, d
 
+# Going from the generators to edge labels
+# 
+# x = ()
+# p = a
+# q = b
+# r = D
+# y = qr = aD
+# z = pq = ab
+
+
+# A 10-tuple of perumtation symbols represents a single copy of the fundamental unit of the Dehn complex, with the following index condition
+#
+#
+# 0 - r - 1
+# |       |
+# y   I   x
+# |       |
+# 2 - p - 3 - q - 4
+# |       |       |
+# x  II   z  III  y
+# |       |       |
+# 5 - q - 6 - p - 7
+# |       |
+# y   IV  x
+# |       |
+# 8 - r - 9
+#
+# lab(x) = permutation label on vertex number x
+#
+# one copy of the fundamental unit is a python tuple T with the property
+#    T(x) = lab(x)
+
+
+# labeled-square-complex: list of (10-tuple of permutation symbols) of length k
+
+# For example the cover corresponding to the irregular degree 4 cover is represented by
+# 
+# [ (0,1,3,1,2,3,3,1,0,3),
+#   (1,3,2,3,3,2,0,0,1,0),
+#   (2,2,1,2,0,1,2,3,2,2),
+#   (3,0,0,0,1,0,1,2,3,1) ]
+#
+# See picture in discord for schematic correspondence.
+
 
 def kev_inverse(permutation):
     out = [0] * len(permutation)
@@ -54,9 +98,15 @@ def is_special_cover(perm_rep):
         return "both"
 
 
+# Implement
 # generate_squares: permutation-representation ->
 #  labeled-square-complex
 def generate_squares(perm_rep):
+    a = perm_rep[0];
+    b = perm_rep[1];
+    c = perm_rep[2];
+    d = perm_rep[3];
+    degree = len(a);
     return []
 
 
