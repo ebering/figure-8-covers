@@ -22,7 +22,8 @@ covers = permutation_reps(4, relators, [], 10)
 # z = pq = ab
 
 
-# A 10-tuple of perumtation symbols represents a single copy of the fundamental unit of the Dehn complex, with the following index condition
+# A 10-tuple of perumtation symbols represents a single copy of the
+# fundamental unit of the Dehn complex, with the following index condition
 #
 #
 # 0 - r - 1
@@ -56,15 +57,7 @@ covers = permutation_reps(4, relators, [], 10)
 #
 # See picture in discord for schematic correspondence.
 
-
-def kev_inverse(permutation):
-    out = [0] * len(permutation)
-    for i in range(len(permutation)):
-        out[permutation[i]] = i
-    return out
-
-
-def ivy_inverse(permutation):
+def inverse(permutation):
     out = list(range(len(permutation)))
     for i in range(len(permutation)):
         out[permutation[i]] = i
@@ -102,12 +95,30 @@ def is_special_cover(perm_rep):
 # generate_squares: permutation-representation ->
 #  labeled-square-complex
 def generate_squares(perm_rep):
-    a = perm_rep[0];
-    b = perm_rep[1];
-    c = perm_rep[2];
-    d = perm_rep[3];
-    degree = len(a);
-    return []
+    a = perm_rep[0]
+    b = perm_rep[1]
+    c = perm_rep[2]
+    d = perm_rep[3]
+    A = inverse(a)
+    D = inverse(d)
+
+    degree = len(a)
+    complexes = [tuple()] * degree
+    for i in range(degree):
+        complexes[i] =(
+            i,  # 0
+            D[i],  # 1
+            a[D[i]],  # 2
+            D[i],  # 3
+            b[D[i]],  # 4
+            a[D[i]],  # 5
+            b[a[D[i]]],  # 6
+            A[b[a[D[i]]]],  # 7
+            a[D[a[D[i]]]],  # 8
+            d[a[D[a[D[i]]]]]  # 9
+        )
+
+    return complexes
 
 
 # search_hyperplanes: labeled-square-complex ->
@@ -131,13 +142,13 @@ def direct_osculates(hyp):
     return False
 
 
-permutation_1 = [1, 3, 4, 0, 2]
-print(permutation_1)
-print(ivy_inverse(permutation_1))
-print(ivy_inverse(kev_inverse(permutation_1)))
+# for c in covers:
+#     kind = is_special_cover(c)
+#     if kind:
+#         print(kind, c)
 
 
-for c in covers:
-    kind = is_special_cover(c)
-    if kind:
-        print(kind, c)
+covers_test = [[0, 3, 1, 2], [1, 2, 0, 3], [2, 1, 3, 0], [3, 0, 2, 1]]
+squares_test = generate_squares(covers_test)
+for i in squares_test:
+    print(i)
