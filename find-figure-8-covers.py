@@ -43,7 +43,7 @@ covers = permutation_reps(4, relators, [], 10)
 # lab(x) = permutation label on vertex number x
 #
 # one copy of the fundamental unit is a python tuple T with the property
-#    T(x) = lab(x)
+#    T[x] = lab(x)
 
 
 # labeled-square-complex: list of (10-tuple of permutation symbols) of length k
@@ -56,6 +56,14 @@ covers = permutation_reps(4, relators, [], 10)
 #   (3,0,0,0,1,0,1,2,3,1) ]
 #
 # See picture in discord for schematic correspondence.
+
+# edge: (symbol, edge-label)
+# edge-label: "p" or "q" or "r" or "x" or "y" or "z"
+# orientation: 1 or -1
+# oriented-edge: (symbol, edge-label, orientation)
+# hyperplane: set(edge)
+# oriented-hyperplane: set(oriented-edges)
+
 
 def inverse(permutation):
     out = list(range(len(permutation)))
@@ -105,24 +113,71 @@ def generate_squares(perm_rep):
     degree = len(a)
     complexes = [tuple()] * degree
     for i in range(degree):
-        complexes[i] =(
+        complexes[i] = (
             i,  # 0
-            D[i],  # 1
-            a[D[i]],  # 2
-            D[i],  # 3
-            b[D[i]],  # 4
-            a[D[i]],  # 5
-            b[a[D[i]]],  # 6
-            A[b[a[D[i]]]],  # 7
-            a[D[a[D[i]]]],  # 8
-            d[a[D[a[D[i]]]]]  # 9
+            D[i],  # 1: i.r
+            a[D[i]],  # 2: i.y
+            D[i],  # 3: i.rx
+            b[D[i]],  # 4: i.rxq
+            a[D[i]],  # 5: i.yx
+            b[a[D[i]]],  # 6: i.yxq = i.rxz
+            A[b[a[D[i]]]],  # 7: i.yxqP
+            a[D[a[D[i]]]],  # 8: i.yxy
+            d[a[D[a[D[i]]]]]  # 9: i.yxyR
         )
 
     return complexes
 
 
+# Implement
+# find_neighbors: edge labeled-square-complex -> list of edge
+def find_neighbors(edge,square_cx):
+    # Cases, one for each label (use a python match statement)
+    match edge:
+        case (x,"r"):
+            return []
+        case _:
+            return []
+    return []
+
+
+# Implement an oriented version
+# generate_hyperplane: edge labeled-square-complex -> hyperplane
+# version 1
+def generate_hyperplane(edge,square_cx):
+    hyp = [edge] # make oriented
+
+    neighbors = find_neighbors(edge, square_cx);
+
+    while len(neighbors) > 0:
+        n = neighors.pop()
+        if hyp.count(n) == 0:
+            hyp.append(n)
+            neighbors.append(find_neighbors(n))
+
+    return hyp
+
+
+# probably use this
+# also test these on the deg 4 or deg 2.
+def generate_hyperplane(edge,square_cx):
+    hyp = set(edge)
+
+    neighbors = set(find_neighbors(edge, square_cx))
+
+    while len(neighbors - hyp) > 0:
+        new = neighbors - hyp
+        hyp = hyp | neighbors
+        neighbors = set()
+        for n in new:
+            neighbors |= set(find_neighbors(edge, square_cx))
+
+    return hyp
+
+
 # search_hyperplanes: labeled-square-complex ->
 #   list of hyperplane
+# Stretch goal: implement this (should be "easy" once you have the rest)
 def search_hyperplanes(square_cx):
     return []
 
@@ -147,8 +202,7 @@ def direct_osculates(hyp):
 #     if kind:
 #         print(kind, c)
 
-
-covers_test = [[0, 3, 1, 2], [1, 2, 0, 3], [2, 1, 3, 0], [3, 0, 2, 1]]
+covers_test = covers[6]
 squares_test = generate_squares(covers_test)
 for i in squares_test:
     print(i)
