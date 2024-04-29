@@ -4,6 +4,7 @@ relators = ['AdaC', 'BabC', 'CdcB']
 
 covers = permutation_reps(4, relators, [], 10)
 
+
 # Data types:
 
 # permutation on k symbols: list of ( 0 ≤ i < k integer) of length k
@@ -67,8 +68,8 @@ covers = permutation_reps(4, relators, [], 10)
 
 def inverse(permutation):
     out = list(range(len(permutation)))
-    for i in range(len(permutation)):
-        out[permutation[i]] = i
+    for index in range(len(permutation)):
+        out[permutation[index]] = index
     return out
 
 
@@ -131,23 +132,62 @@ def generate_squares(perm_rep):
 
 # Implement
 # find_neighbors: edge labeled-square-complex -> list of edge
-def find_neighbors(edge,square_cx):
+def find_neighbors(edge, square_cx):
     # Cases, one for each label (use a python match statement)
-    match edge:
-        case (x,"r"):
-            return []
+    output = []
+    match edge[1]:  # label of edge
+        case "x":
+            for cx in square_cx:
+                if edge[0] == cx[3]:
+                    output += (cx[0], "y")
+                if edge[0] == cx[5]:
+                    output += (cx[3], "z")
+                if edge[0] == cx[9]:
+                    output += (cx[5], "y")
+        case "y":
+            for cx in square_cx:
+                if edge[0] == cx[0]:
+                    output += (cx[3], "x")
+                if edge[0] == cx[5]:
+                    output += (cx[9], "x")
+                if edge[0] == cx[7]:
+                    output += (cx[3], "z")
+        case "z":
+            for cx in square_cx:
+                if edge[0] == cx[3]:
+                    output += (cx[5], "x")
+                    output += (cx[7], "y")
+        case "p":
+            for cx in square_cx:
+                if edge[0] == cx[3]:
+                    output += (cx[0], "r")
+                    output += (cx[5], "q")
+                if edge[0] == cx[7]:
+                    output += (cx[3], "q")
+        case "q":
+            for cx in square_cx:
+                if edge[0] == cx[3]:
+                    output += (cx[7], "p")
+                if edge[0] == cx[5]:
+                    output += (cx[3], "p")
+                    output += (cx[9], "r")
+        case "r":
+            for cx in square_cx:
+                if edge[0] == cx[0]:
+                    output += (cx[3], "p")
+                if edge[0] == cx[9]:
+                    output += (cx[5], "q")
         case _:
-            return []
-    return []
+            return output
 
 
 # Implement an oriented version
 # generate_hyperplane: edge labeled-square-complex -> hyperplane
 # version 1
-def generate_hyperplane(edge,square_cx):
-    hyp = [edge] # make oriented
+def generate_hyperplane(edge, square_cx):
+    hyp = [edge]  # make oriented
 
-    neighbors = find_neighbors(edge, square_cx);
+    neighbors = find_neighbors(edge, square_cx)
 
     while len(neighbors) > 0:
         n = neighors.pop()
@@ -160,7 +200,7 @@ def generate_hyperplane(edge,square_cx):
 
 # probably use this
 # also test these on the deg 4 or deg 2.
-def generate_hyperplane(edge,square_cx):
+def generate_hyperplane(edge, square_cx):
     hyp = set(edge)
 
     neighbors = set(find_neighbors(edge, square_cx))
