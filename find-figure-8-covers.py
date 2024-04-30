@@ -194,7 +194,7 @@ def generate_hyperplane(edge, square_cx):
     neighbors = find_neighbors(edge, square_cx)
 
     while len(neighbors) > 0:
-        n = neighors.pop()
+        n = neighbors.pop()
         if hyp.count(n) == 0:
             hyp.append(n)
             neighbors.append(find_neighbors(n))
