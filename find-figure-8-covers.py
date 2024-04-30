@@ -139,57 +139,61 @@ def find_neighbors(edge, square_cx):
         case "x":
             for cx in square_cx:
                 if edge[0] == cx[3]:
-                    output += (cx[0], "y")
+                    output.append((cx[0], "y"))
                 if edge[0] == cx[5]:
-                    output += (cx[3], "z")
+                    output.append((cx[3], "z"))
                 if edge[0] == cx[9]:
-                    output += (cx[5], "y")
+                    output.append((cx[5], "y"))
             return output
         case "y":
             for cx in square_cx:
                 if edge[0] == cx[0]:
-                    output += (cx[3], "x")
+                    output.append((cx[3], "x"))
                 if edge[0] == cx[5]:
-                    output += (cx[9], "x")
+                    output.append((cx[9], "x"))
                 if edge[0] == cx[7]:
-                    output += (cx[3], "z")
+                    output.append((cx[3], "z"))
                 return output
         case "z":
             for cx in square_cx:
                 if edge[0] == cx[3]:
-                    output += (cx[5], "x")
-                    output += (cx[7], "y")
+                    output.append((cx[5], "x"))
+                    output.append((cx[7], "y"))
             return output
         case "p":
             for cx in square_cx:
                 if edge[0] == cx[3]:
-                    output += (cx[0], "r")
-                    output += (cx[5], "q")
+                    output.append((cx[0], "r"))
+                    output.append((cx[5], "q"))
                 if edge[0] == cx[7]:
-                    output += (cx[3], "q")
+                    output.append((cx[3], "q"))
             return output
         case "q":
             for cx in square_cx:
                 if edge[0] == cx[3]:
-                    output += (cx[7], "p")
+                    output.append((cx[7], "p"))
                 if edge[0] == cx[5]:
-                    output += (cx[3], "p")
-                    output += (cx[9], "r")
+                    output.append((cx[3], "p"))
+                    output.append((cx[9], "r"))
             return output
         case "r":
             for cx in square_cx:
                 if edge[0] == cx[0]:
-                    output += (cx[3], "p")
+                    output.append((cx[3], "p"))
                 if edge[0] == cx[9]:
-                    output += (cx[5], "q")
+                    output.append((cx[5], "q"))
             return output
 
 
 # Implement an oriented version
 # generate_hyperplane: edge labeled-square-complex -> hyperplane
 # version 1
-def generate_hyperplane(edge, square_cx):
-    hyp = [edge]  # make oriented
+def generate_hyperplane_list(edge, square_cx):
+    hyp = []
+    hyp.append(edge)  # make oriented
+
+    print(here)
+    print(hyp)
 
     neighbors = find_neighbors(edge, square_cx)
 
@@ -197,15 +201,16 @@ def generate_hyperplane(edge, square_cx):
         n = neighbors.pop()
         if hyp.count(n) == 0:
             hyp.append(n)
-            neighbors.append(find_neighbors(n))
+            neighbors += find_neighbors(n)
 
     return hyp
 
 
 # probably use this
 # also test these on the deg 4 or deg 2.
-def generate_hyperplane(edge, square_cx):
-    hyp = set(edge)
+def generate_hyperplane_set(edge, square_cx):
+    hyp = set()
+    hyp.add(edge)
 
     neighbors = set(find_neighbors(edge, square_cx))
 
@@ -214,7 +219,7 @@ def generate_hyperplane(edge, square_cx):
         hyp = hyp | neighbors
         neighbors = set()
         for n in new:
-            neighbors |= set(find_neighbors(edge, square_cx))
+            neighbors |= set(find_neighbors(n, square_cx))
 
     return hyp
 
@@ -248,5 +253,11 @@ def direct_osculates(hyp):
 
 covers_test = covers[6]
 squares_test = generate_squares(covers_test)
-for i in squares_test:
-    print(i)
+hypertestvert = generate_hyperplane_set((0,"r"),squares_test)
+hypertesthoriz = generate_hyperplane_set((0,"y"),squares_test)
+print(hypertestvert)
+print(len(hypertestvert))
+print(hypertesthoriz)
+print(len(hypertesthoriz))
+#for i in squares_test:
+#    print(i)
