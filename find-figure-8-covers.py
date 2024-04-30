@@ -113,18 +113,18 @@ def generate_squares(perm_rep):
 
     degree = len(a)
     complexes = [tuple()] * degree
-    for i in range(degree):
-        complexes[i] = (
-            i,  # 0
-            D[i],  # 1: i.r
-            a[D[i]],  # 2: i.y
-            D[i],  # 3: i.rx
-            b[D[i]],  # 4: i.rxq
-            a[D[i]],  # 5: i.yx
-            b[a[D[i]]],  # 6: i.yxq = i.rxz
-            A[b[a[D[i]]]],  # 7: i.yxqP
-            a[D[a[D[i]]]],  # 8: i.yxy
-            d[a[D[a[D[i]]]]]  # 9: i.yxyR
+    for s in range(degree):
+        complexes[s] = (
+            s,  # 0
+            D[s],  # 1: i.r
+            a[D[s]],  # 2: i.y
+            D[s],  # 3: i.rx
+            b[D[s]],  # 4: i.rxq
+            a[D[s]],  # 5: i.yx
+            b[a[D[s]]],  # 6: i.yxq = i.rxz
+            A[b[a[D[s]]]],  # 7: i.yxqP
+            a[D[a[D[s]]]],  # 8: i.yxy
+            d[a[D[a[D[s]]]]]  # 9: i.yxyR
         )
 
     return complexes
