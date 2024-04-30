@@ -144,6 +144,7 @@ def find_neighbors(edge, square_cx):
                     output += (cx[3], "z")
                 if edge[0] == cx[9]:
                     output += (cx[5], "y")
+            return output
         case "y":
             for cx in square_cx:
                 if edge[0] == cx[0]:
@@ -152,11 +153,13 @@ def find_neighbors(edge, square_cx):
                     output += (cx[9], "x")
                 if edge[0] == cx[7]:
                     output += (cx[3], "z")
+                return output
         case "z":
             for cx in square_cx:
                 if edge[0] == cx[3]:
                     output += (cx[5], "x")
                     output += (cx[7], "y")
+            return output
         case "p":
             for cx in square_cx:
                 if edge[0] == cx[3]:
@@ -164,6 +167,7 @@ def find_neighbors(edge, square_cx):
                     output += (cx[5], "q")
                 if edge[0] == cx[7]:
                     output += (cx[3], "q")
+            return output
         case "q":
             for cx in square_cx:
                 if edge[0] == cx[3]:
@@ -171,13 +175,13 @@ def find_neighbors(edge, square_cx):
                 if edge[0] == cx[5]:
                     output += (cx[3], "p")
                     output += (cx[9], "r")
+            return output
         case "r":
             for cx in square_cx:
                 if edge[0] == cx[0]:
                     output += (cx[3], "p")
                 if edge[0] == cx[9]:
                     output += (cx[5], "q")
-        case _:
             return output
 
 
