@@ -153,7 +153,7 @@ def find_neighbors(edge, square_cx):
                     output.append((cx[9], "x"))
                 if edge[0] == cx[7]:
                     output.append((cx[3], "z"))
-                return output
+            return output
         case "z":
             for cx in square_cx:
                 if edge[0] == cx[3]:
@@ -185,30 +185,7 @@ def find_neighbors(edge, square_cx):
             return output
 
 
-# Implement an oriented version
-# generate_hyperplane: edge labeled-square-complex -> hyperplane
-# version 1
-def generate_hyperplane_list(edge, square_cx):
-    hyp = []
-    hyp.append(edge)  # make oriented
-
-    print(here)
-    print(hyp)
-
-    neighbors = find_neighbors(edge, square_cx)
-
-    while len(neighbors) > 0:
-        n = neighbors.pop()
-        if hyp.count(n) == 0:
-            hyp.append(n)
-            neighbors += find_neighbors(n)
-
-    return hyp
-
-
-# probably use this
-# also test these on the deg 4 or deg 2.
-def generate_hyperplane_set(edge, square_cx):
+def generate_hyperplane(edge, square_cx):
     hyp = set()
     hyp.add(edge)
 
@@ -216,6 +193,7 @@ def generate_hyperplane_set(edge, square_cx):
 
     while len(neighbors - hyp) > 0:
         new = neighbors - hyp
+        print(new)
         hyp = hyp | neighbors
         neighbors = set()
         for n in new:
@@ -253,11 +231,7 @@ def direct_osculates(hyp):
 
 covers_test = covers[6]
 squares_test = generate_squares(covers_test)
-hypertestvert = generate_hyperplane_set((0,"r"),squares_test)
-hypertesthoriz = generate_hyperplane_set((0,"y"),squares_test)
-print(hypertestvert)
-print(len(hypertestvert))
-print(hypertesthoriz)
-print(len(hypertesthoriz))
-#for i in squares_test:
-#    print(i)
+hypertestvert = generate_hyperplane((0,"r"),squares_test)
+hypertesthoriz = generate_hyperplane((0,"y"),squares_test)
+for i in squares_test:
+   print(i)
