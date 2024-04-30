@@ -23,7 +23,7 @@ covers = permutation_reps(4, relators, [], 10)
 # z = pq = ab
 
 
-# A 10-tuple of perumtation symbols represents a single copy of the
+# A 10-tuple of permutation symbols represents a single copy of the
 # fundamental unit of the Dehn complex, with the following index condition
 #
 #
@@ -106,7 +106,7 @@ def is_special_cover(perm_rep):
 def generate_squares(perm_rep):
     a = perm_rep[0]
     b = perm_rep[1]
-    c = perm_rep[2]
+    # c = perm_rep[2]
     d = perm_rep[3]
     A = inverse(a)
     D = inverse(d)
@@ -186,7 +186,7 @@ def find_neighbors(edge, square_cx):
 
 
 def find_neighbors_oriented(oedge, square_cx):
-    return list(map(lambda e: (e[0],e[1], -1*oedge[2]), find_neighbors(oedge, square_cx)))
+    return list(map(lambda e: (e[0], e[1], -1*oedge[2]), find_neighbors(oedge, square_cx)))
 
 
 def generate_hyperplane(edge, square_cx):
@@ -225,7 +225,7 @@ def generate_hyperplane_oriented(oedge, square_cx):
 
 # search_hyperplanes: labeled-square-complex ->
 #   list of hyperplane
-#Goal: implement!
+# Goal: implement!
 def search_hyperplanes(square_cx):
     # make all oriented edges
 
@@ -266,11 +266,11 @@ def direct_osculates(hyp):
 
 covers_test = covers[6]
 squares_test = generate_squares(covers_test)
-hypertestvert = generate_hyperplane((0,"r"),squares_test)
-hypertesthoriz = generate_hyperplane((0,"y"),squares_test)
-hyperorient = generate_hyperplane_oriented((0,"r",1),squares_test)
+hypertestvert = generate_hyperplane((0, "r"), squares_test)
+hypertesthoriz = generate_hyperplane((0, "y"), squares_test)
+hyperorient = generate_hyperplane_oriented((0, "r", 1), squares_test)
 print(hyperorient)
 print(len(hyperorient))
 
 for i in squares_test:
-   print(i)
+    print(i)
