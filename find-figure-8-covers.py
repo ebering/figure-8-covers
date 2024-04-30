@@ -197,7 +197,6 @@ def generate_hyperplane(edge, square_cx):
 
     while len(neighbors - hyp) > 0:
         new = neighbors - hyp
-        print(new)
         hyp = hyp | neighbors
         neighbors = set()
         for n in new:
@@ -214,7 +213,6 @@ def generate_hyperplane_oriented(oedge, square_cx):
 
     while len(neighbors - hyp) > 0:
         new = neighbors - hyp
-        print(new)
         hyp = hyp | neighbors
         neighbors = set()
         for n in new:
@@ -227,13 +225,26 @@ def generate_hyperplane_oriented(oedge, square_cx):
 #   list of hyperplane
 # Goal: implement!
 def search_hyperplanes(square_cx):
-    # make all oriented edges
+    # each hyperplane is a set of oriented edges
+    # planes is a list of hyperplanes. (planes is a list of sets of oedges)
+    planes = []
+
+    # make set of all oriented edges
+    oedges = set()
+    for label_ in {"x", "y", "z", "p", "q", "r"}:
+        for start_ in range(len(square_cx)):
+            oedges.add((start_, label_, 1))
+            oedges.add((start_, label_, -1))
 
     # take an edge, generate its hyperplane, add to output
     # delete the result from all edges
     # if you have edges left, do it again
+    while len(oedges) > 0:
+        new = generate_hyperplane_oriented(oedges.pop(), square_cx)  # pop removes arbitrary item, and returns it
+        oedges -= new
+        planes.append(new)
 
-    return []
+    return planes
 
 
 # is_one_sided: oriented_hyperplane -> bool
@@ -269,8 +280,11 @@ squares_test = generate_squares(covers_test)
 hypertestvert = generate_hyperplane((0, "r"), squares_test)
 hypertesthoriz = generate_hyperplane((0, "y"), squares_test)
 hyperorient = generate_hyperplane_oriented((0, "r", 1), squares_test)
-print(hyperorient)
-print(len(hyperorient))
+# print(hyperorient)
+# print(len(hyperorient))
+planes_list = search_hyperplanes(squares_test)
 
-for i in squares_test:
+for i in planes_list:
+    print("hyperplane length " + str(len(i)))
     print(i)
+
