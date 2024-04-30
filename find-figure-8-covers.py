@@ -185,6 +185,10 @@ def find_neighbors(edge, square_cx):
             return output
 
 
+def find_neighbors_oriented(oedge, square_cx):
+    return list(map(lambda e: (e[0],e[1], -1*oedge[2]), find_neighbors(oedge, square_cx)))
+
+
 def generate_hyperplane(edge, square_cx):
     hyp = set()
     hyp.add(edge)
@@ -202,24 +206,55 @@ def generate_hyperplane(edge, square_cx):
     return hyp
 
 
+def generate_hyperplane_oriented(oedge, square_cx):
+    hyp = set()
+    hyp.add(oedge)
+
+    neighbors = set(find_neighbors_oriented(oedge, square_cx))
+
+    while len(neighbors - hyp) > 0:
+        new = neighbors - hyp
+        print(new)
+        hyp = hyp | neighbors
+        neighbors = set()
+        for n in new:
+            neighbors |= set(find_neighbors_oriented(n, square_cx))
+
+    return hyp
+
+
 # search_hyperplanes: labeled-square-complex ->
 #   list of hyperplane
-# Stretch goal: implement this (should be "easy" once you have the rest)
+#Goal: implement!
 def search_hyperplanes(square_cx):
+    # make all oriented edges
+
+    # take an edge, generate its hyperplane, add to output
+    # delete the result from all edges
+    # if you have edges left, do it again
+
     return []
 
 
-# is_one_sided: hyperplane -> bool
+# is_one_sided: oriented_hyperplane -> bool
+# Goal: implement!
 def is_one_sided(hyp):
+    # one way: add square_cx as an argument
+    # and check if the oriented and unoriented have different
+    # sizes
+
+    # Another way: take the first edge e and check if opp(e)\in hyp
     return False
 
 
 # self_osculates: hyperplane -> bool
+# Stretch goal
 def self_osculates(hyp):
     return False
 
 
 # direct_osculates: hyperplane -> bool
+# Stretch goal
 def direct_osculates(hyp):
     return False
 
@@ -233,5 +268,9 @@ covers_test = covers[6]
 squares_test = generate_squares(covers_test)
 hypertestvert = generate_hyperplane((0,"r"),squares_test)
 hypertesthoriz = generate_hyperplane((0,"y"),squares_test)
+hyperorient = generate_hyperplane_oriented((0,"r",1),squares_test)
+print(hyperorient)
+print(len(hyperorient))
+
 for i in squares_test:
    print(i)
