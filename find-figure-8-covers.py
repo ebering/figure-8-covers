@@ -250,12 +250,12 @@ def search_hyperplanes(square_cx):
 # is_one_sided: oriented_hyperplane -> bool
 # Goal: implement!
 def is_one_sided(hyp):
-    # one way: add square_cx as an argument
-    # and check if the oriented and unoriented have different
-    # sizes
-
-    # Another way: take the first edge e and check if opp(e)\in hyp
-    return False
+    # hyp is a set of oriented edges
+    # If a hyperplane is one-sided, every edge will appear in both orientations
+    # The for loop will run exactly one time
+    edge_ = list(hyp)[0]
+    inverse_edge_ = (edge_[0], edge_[1], -1*edge_[2])
+    return inverse_edge_ in hyp
 
 
 # self_osculates: hyperplane -> bool
