@@ -73,9 +73,17 @@ def inverse(permutation):
     return out
 
 
+def composition(sigma_1, sigma_2):
+    # should return sigma_1(sigma_2([i]))
+    comp = list(range(len(sigma_1)))
+    for index in range(len(sigma_1)):
+        comp[index] = sigma_1[sigma_2[index]]
+    return comp
+
+
 # is_special_cover: permutation-representation -> 
 #   false or "A-special" or "C-special" or "both"
-def is_special_cover(perm_rep):
+def is_special_cover(perm_rep, labels):
     C = generate_squares(perm_rep)
     H = search_hyperplanes(C)
     one_sided = False
@@ -83,12 +91,12 @@ def is_special_cover(perm_rep):
     for h in H:
         if is_one_sided(h):
             one_sided = True
-            if self_osculates(h):
+            if self_osculates(h, perm_rep):
                 return True
         else:
             if direct_osculates(h):
                 return False
-            elif self_osculates(h):
+            elif self_osculates(h, perm_rep):
                 indirect_osculation = True
 
     # if we get here we're some kind of special
@@ -98,6 +106,29 @@ def is_special_cover(perm_rep):
         return "A-special"
     else:
         return "both"
+
+
+# generate labels takes the sigma representations of a,b,c and returns dictionary mapping p,q,r,x,y,z to sigma
+def generate_labels(perm_rep):
+    labels = {}
+    a = perm_rep[0]
+    b = perm_rep[1]
+    # c = perm_rep[2]
+    d = perm_rep[3]
+
+    labels["p"] = a
+    labels["q"] = b
+    labels["r"] = inverse(d)
+
+    sigma_x = list(range(len(perm_rep[0])))
+    for i_ in range(len(sigma_x)):
+        sigma_x[i_] = i_
+
+    labels["x"] = sigma_x
+    labels["y"] = composition(inverse(d), b)
+    labels["z"] = composition(b, a)
+
+    return labels
 
 
 # Implement
@@ -260,7 +291,8 @@ def is_one_sided(hyp):
 
 # self_osculates: hyperplane -> bool
 # Stretch goal
-def self_osculates(hyp):
+def self_osculates(hyp, perm_rep):
+
     return False
 
 
@@ -271,20 +303,13 @@ def direct_osculates(hyp):
 
 
 # for c in covers:
-#     kind = is_special_cover(c)
+#     d = generate_labels
+#     kind = is_special_cover(c, d)
 #     if kind:
 #         print(kind, c)
 
 covers_test = covers[6]
-squares_test = generate_squares(covers_test)
-hypertestvert = generate_hyperplane((0, "r"), squares_test)
-hypertesthoriz = generate_hyperplane((0, "y"), squares_test)
-hyperorient = generate_hyperplane_oriented((0, "r", 1), squares_test)
-# print(hyperorient)
-# print(len(hyperorient))
-planes_list = search_hyperplanes(squares_test)
-
-for i in planes_list:
-    print("hyperplane length " + str(len(i)))
-    print(i)
-
+labels = generate_labels(covers_test)
+for l1 in labels:
+    print(l1)
+    print(labels[l1])
