@@ -83,20 +83,21 @@ def composition(sigma_1, sigma_2):
 
 # is_special_cover: permutation-representation -> 
 #   false or "A-special" or "C-special" or "both"
-def is_special_cover(perm_rep, labels):
+def is_special_cover(perm_rep, dictionary):
     C = generate_squares(perm_rep)
     H = search_hyperplanes(C)
+    print(len(H))
     one_sided = False
     indirect_osculation = False
     for h in H:
         if is_one_sided(h):
             one_sided = True
-            if self_osculates(h, perm_rep):
-                return True
+            if self_osculates(h, dictionary):
+                return "one-sided + osculation"
         else:
-            if direct_osculates(h):
-                return False
-            elif self_osculates(h, perm_rep):
+            if direct_osculates(h, dictionary):
+                return "orientable + direct osculation"
+            elif self_osculates(h, dictionary):
                 indirect_osculation = True
 
     # if we get here we're some kind of special
@@ -110,25 +111,25 @@ def is_special_cover(perm_rep, labels):
 
 # generate labels takes the sigma representations of a,b,c and returns dictionary mapping p,q,r,x,y,z to sigma
 def generate_labels(perm_rep):
-    labels = {}
+    labels_ = {}
     a = perm_rep[0]
     b = perm_rep[1]
     # c = perm_rep[2]
     d = perm_rep[3]
 
-    labels["p"] = a
-    labels["q"] = b
-    labels["r"] = inverse(d)
+    labels_["p"] = a
+    labels_["q"] = b
+    labels_["r"] = inverse(d)
 
     sigma_x = list(range(len(perm_rep[0])))
     for i_ in range(len(sigma_x)):
         sigma_x[i_] = i_
 
-    labels["x"] = sigma_x
-    labels["y"] = composition(inverse(d), b)
-    labels["z"] = composition(b, a)
+    labels_["x"] = sigma_x
+    labels_["y"] = composition(inverse(d), b)
+    labels_["z"] = composition(b, a)
 
-    return labels
+    return labels_
 
 
 # Implement
@@ -291,25 +292,36 @@ def is_one_sided(hyp):
 
 # self_osculates: hyperplane -> bool
 # Stretch goal
-def self_osculates(hyp, perm_rep):
-
+def self_osculates(hyp, dictionary):
+    for edge_1 in hyp:
+        for edge_2 in hyp:  # for each pair of edges
+            if edge_1[0] == edge_2[0] and edge_1[1] != edge_2[1]:
+                return True  # two edges with same origin, different labels
+            if edge_2[1] != edge_2[1] and dictionary[edge_1[1]] == dictionary[edge_2[1]]:
+                return True  # two edges with different labels, same "endpoint"
     return False
 
 
 # direct_osculates: hyperplane -> bool
 # Stretch goal
-def direct_osculates(hyp):
+def direct_osculates(hyp, dictionary):
+    for edge_1 in hyp:
+        for edge_2 in hyp:  # for each pair of edges
+            if edge_1[0] == edge_2[0] and edge_1[1] != edge_2[1] and edge_1[2] == edge_2[2]:
+                return True  # two edges with same origin, different labels, AND orientations match
+            if edge_2[1] != edge_2[1] and dictionary[edge_1[1]] == dictionary[edge_2[1]] and edge_1[2] == edge_2[2]:
+                return True  # two edges with different labels, same "endpoint" AND orientations match
     return False
 
 
-# for c in covers:
-#     d = generate_labels
-#     kind = is_special_cover(c, d)
-#     if kind:
-#         print(kind, c)
+for c in covers:
+    d = generate_labels
+    kind = is_special_cover(c, d)
+    if kind:
+        print(kind, c)
 
-covers_test = covers[6]
-labels = generate_labels(covers_test)
-for l1 in labels:
-    print(l1)
-    print(labels[l1])
+# covers_test = covers[6]
+# labels = generate_labels(covers_test)
+# for l1 in labels:
+#     print(l1)
+#     print(labels[l1])
