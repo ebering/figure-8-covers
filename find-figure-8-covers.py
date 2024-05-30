@@ -73,6 +73,9 @@ def inverse(permutation):
     return out
 
 
+assert inverse([1,2,3,0]) == [3,0,1,2], "fail: inverse"
+
+
 def composition(sigma_1, sigma_2):
     # should return sigma_1(sigma_2([i]))
     comp = list(range(len(sigma_1)))
@@ -81,22 +84,25 @@ def composition(sigma_1, sigma_2):
     return comp
 
 
+assert composition([0,1,2],[1,2,0]) == [1,2,0], "fail: composition"
+
+
 # is_special_cover: permutation-representation -> 
 #   false or "A-special" or "C-special" or "both"
 def is_special_cover(perm_rep, dictionary):
     C = generate_squares(perm_rep)
     H = search_hyperplanes(C)
-    print(len(H))
+    # print(len(perm_rep[0]),len(H))
     one_sided = False
     indirect_osculation = False
     for h in H:
         if is_one_sided(h):
             one_sided = True
             if self_osculates(h, dictionary):
-                return "one-sided + osculation"
+                return ("# planes: " + str(len(H)) + " Not Special: one-sided + osculation",h)
         else:
             if direct_osculates(h, dictionary):
-                return "orientable + direct osculation"
+                return ("# planes: " + str(len(H)) + " Not Special: orientable + direct osculation",h)
             elif self_osculates(h, dictionary):
                 indirect_osculation = True
 
@@ -111,25 +117,25 @@ def is_special_cover(perm_rep, dictionary):
 
 # generate labels takes the sigma representations of a,b,c and returns dictionary mapping p,q,r,x,y,z to sigma
 def generate_labels(perm_rep):
-    labels_ = {}
+    labels = {}
     a = perm_rep[0]
     b = perm_rep[1]
     # c = perm_rep[2]
     d = perm_rep[3]
 
-    labels_["p"] = a
-    labels_["q"] = b
-    labels_["r"] = inverse(d)
+    labels["p"] = a
+    labels["q"] = b
+    labels["r"] = inverse(d)
 
     sigma_x = list(range(len(perm_rep[0])))
-    for i_ in range(len(sigma_x)):
-        sigma_x[i_] = i_
+    for i in range(len(sigma_x)):
+        sigma_x[i] = i
 
-    labels_["x"] = sigma_x
-    labels_["y"] = composition(inverse(d), b)
-    labels_["z"] = composition(b, a)
+    labels["x"] = sigma_x
+    labels["y"] = composition(inverse(d), b)
+    labels["z"] = composition(b, a)
 
-    return labels_
+    return labels
 
 
 # Implement
@@ -318,7 +324,7 @@ for c in covers:
     d = generate_labels
     kind = is_special_cover(c, d)
     if kind:
-        print(kind, c)
+        print(len(c[0]), kind[0],list(kind[1])[0])
 
 # covers_test = covers[6]
 # labels = generate_labels(covers_test)
